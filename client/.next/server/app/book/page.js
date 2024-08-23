@@ -89,6 +89,105 @@ module.exports = require("next/dist/compiled/next-server/app-page.runtime.dev.js
 
 /***/ }),
 
+/***/ "buffer":
+/*!*************************!*\
+  !*** external "buffer" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("buffer");
+
+/***/ }),
+
+/***/ "child_process":
+/*!********************************!*\
+  !*** external "child_process" ***!
+  \********************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
+
+/***/ }),
+
+/***/ "crypto":
+/*!*************************!*\
+  !*** external "crypto" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("crypto");
+
+/***/ }),
+
+/***/ "events":
+/*!*************************!*\
+  !*** external "events" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("events");
+
+/***/ }),
+
+/***/ "fs":
+/*!*********************!*\
+  !*** external "fs" ***!
+  \*********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("fs");
+
+/***/ }),
+
+/***/ "http":
+/*!***********************!*\
+  !*** external "http" ***!
+  \***********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("http");
+
+/***/ }),
+
+/***/ "https":
+/*!************************!*\
+  !*** external "https" ***!
+  \************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("https");
+
+/***/ }),
+
+/***/ "net":
+/*!**********************!*\
+  !*** external "net" ***!
+  \**********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("net");
+
+/***/ }),
+
+/***/ "os":
+/*!*********************!*\
+  !*** external "os" ***!
+  \*********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("os");
+
+/***/ }),
+
 /***/ "path":
 /*!***********************!*\
   !*** external "path" ***!
@@ -100,6 +199,39 @@ module.exports = require("path");
 
 /***/ }),
 
+/***/ "stream":
+/*!*************************!*\
+  !*** external "stream" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("stream");
+
+/***/ }),
+
+/***/ "tls":
+/*!**********************!*\
+  !*** external "tls" ***!
+  \**********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("tls");
+
+/***/ }),
+
+/***/ "tty":
+/*!**********************!*\
+  !*** external "tty" ***!
+  \**********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("tty");
+
+/***/ }),
+
 /***/ "url":
 /*!**********************!*\
   !*** external "url" ***!
@@ -108,6 +240,48 @@ module.exports = require("path");
 
 "use strict";
 module.exports = require("url");
+
+/***/ }),
+
+/***/ "util":
+/*!***********************!*\
+  !*** external "util" ***!
+  \***********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("util");
+
+/***/ }),
+
+/***/ "zlib":
+/*!***********************!*\
+  !*** external "zlib" ***!
+  \***********************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("zlib");
+
+/***/ }),
+
+/***/ "?32c4":
+/*!****************************!*\
+  !*** bufferutil (ignored) ***!
+  \****************************/
+/***/ (() => {
+
+/* (ignored) */
+
+/***/ }),
+
+/***/ "?66e9":
+/*!********************************!*\
+  !*** utf-8-validate (ignored) ***!
+  \********************************/
+/***/ (() => {
+
+/* (ignored) */
 
 /***/ }),
 
@@ -132,6 +306,16 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
+/***/ "(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fcomponents%2Fbus.jsx%22%2C%22ids%22%3A%5B%22default%22%5D%7D&server=true!":
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fcomponents%2Fbus.jsx%22%2C%22ids%22%3A%5B%22default%22%5D%7D&server=true! ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+
+eval("Promise.resolve(/*! import() eager */).then(__webpack_require__.bind(__webpack_require__, /*! ./components/bus.jsx */ \"(ssr)/./components/bus.jsx\"));\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9ub2RlX21vZHVsZXMvbmV4dC9kaXN0L2J1aWxkL3dlYnBhY2svbG9hZGVycy9uZXh0LWZsaWdodC1jbGllbnQtZW50cnktbG9hZGVyLmpzP21vZHVsZXM9JTdCJTIycmVxdWVzdCUyMiUzQSUyMiUyRmhvbWUlMkZzYXR5YS10dDA0OTIlMkZEb2N1bWVudHMlMkZUVCUyRnRyaWFsLXNlcnZlciUyRmNsaWVudCUyRmNvbXBvbmVudHMlMkZidXMuanN4JTIyJTJDJTIyaWRzJTIyJTNBJTVCJTIyZGVmYXVsdCUyMiU1RCU3RCZzZXJ2ZXI9dHJ1ZSEiLCJtYXBwaW5ncyI6IkFBQUEsb0pBQXdJIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vY2xpZW50Lz9mMWYxIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCgvKiB3ZWJwYWNrTW9kZTogXCJlYWdlclwiLCB3ZWJwYWNrRXhwb3J0czogW1wiZGVmYXVsdFwiXSAqLyBcIi9ob21lL3NhdHlhLXR0MDQ5Mi9Eb2N1bWVudHMvVFQvdHJpYWwtc2VydmVyL2NsaWVudC9jb21wb25lbnRzL2J1cy5qc3hcIik7XG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fcomponents%2Fbus.jsx%22%2C%22ids%22%3A%5B%22default%22%5D%7D&server=true!\n");
+
+/***/ }),
+
 /***/ "(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Fapp-router.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Fclient-page.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Ferror-boundary.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Flayout-router.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Fnot-found-boundary.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Frender-from-template-context.js%22%2C%22ids%22%3A%5B%5D%7D&server=true!":
 /*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Fapp-router.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Fclient-page.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Ferror-boundary.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Flayout-router.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Fnot-found-boundary.js%22%2C%22ids%22%3A%5B%5D%7D&modules=%7B%22request%22%3A%22%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fnode_modules%2Fnext%2Fdist%2Fclient%2Fcomponents%2Frender-from-template-context.js%22%2C%22ids%22%3A%5B%5D%7D&server=true! ***!
@@ -142,13 +326,36 @@ eval("Promise.resolve(/*! import() eager */).then(__webpack_require__.t.bind(__w
 
 /***/ }),
 
-/***/ "(ssr)/./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?server=true!":
-/*!******************************************************************************************************!*\
-  !*** ./node_modules/next/dist/build/webpack/loaders/next-flight-client-entry-loader.js?server=true! ***!
-  \******************************************************************************************************/
-/***/ (() => {
+/***/ "(ssr)/./components/bus.jsx":
+/*!****************************!*\
+  !*** ./components/bus.jsx ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(ssr)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! socket.io-client */ \"(ssr)/./node_modules/socket.io-client/build/esm-debug/index.js\");\n/* harmony import */ var _row__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./row */ \"(ssr)/./components/row.jsx\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ \"(ssr)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/ssr/react.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_3__);\n/* __next_internal_client_entry_do_not_use__ default auto */ \n\n\n\nconst socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_1__.io)(\"http://localhost:8000\");\nconst Bus = ({ busNo })=>{\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n        className: \" border-4 border-blue-300 rounded-lg w-fit\",\n        children: [\n            ...Array(15)\n        ].map((_, ind)=>/*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(_row__WEBPACK_IMPORTED_MODULE_2__[\"default\"], {\n                busNo: busNo,\n                rowNo: ind\n            }, ind, false, {\n                fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/bus.jsx\",\n                lineNumber: 13,\n                columnNumber: 17\n            }, undefined))\n    }, void 0, false, {\n        fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/bus.jsx\",\n        lineNumber: 11,\n        columnNumber: 9\n    }, undefined);\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Bus);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9jb21wb25lbnRzL2J1cy5qc3giLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7QUFFc0M7QUFDZDtBQUNvQjtBQUU1QyxNQUFNSSxTQUFPSixvREFBRUEsQ0FBQztBQUVoQixNQUFNSyxNQUFJLENBQUMsRUFBQ0MsS0FBSyxFQUFDO0lBQ2QscUJBQ0ksOERBQUNDO1FBQUlDLFdBQVU7a0JBQ1Y7ZUFBSUMsTUFBTTtTQUFJLENBQUNDLEdBQUcsQ0FBQyxDQUFDQyxHQUFFQyxvQkFDbkIsOERBQUNYLDRDQUFHQTtnQkFBV0ssT0FBT0E7Z0JBQU9PLE9BQU9EO2VBQTFCQTs7Ozs7Ozs7OztBQUkxQjtBQUVBLGlFQUFlUCxHQUFHQSxFQUFDIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vY2xpZW50Ly4vY29tcG9uZW50cy9idXMuanN4P2YyZDMiXSwic291cmNlc0NvbnRlbnQiOlsiXCJ1c2UgY2xpZW50XCI7XG5cbmltcG9ydCB7IGlvIH0gZnJvbSBcInNvY2tldC5pby1jbGllbnRcIjtcbmltcG9ydCBSb3cgZnJvbSBcIi4vcm93XCI7XG5pbXBvcnQgeyB1c2VFZmZlY3QsIHVzZVN0YXRlIH0gZnJvbSBcInJlYWN0XCI7XG5cbmNvbnN0IHNvY2tldD1pbyhcImh0dHA6Ly9sb2NhbGhvc3Q6ODAwMFwiKTtcblxuY29uc3QgQnVzPSh7YnVzTm99KT0+e1xuICAgIHJldHVybiAoXG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiIGJvcmRlci00IGJvcmRlci1ibHVlLTMwMCByb3VuZGVkLWxnIHctZml0XCI+XG4gICAgICAgICAgICB7Wy4uLkFycmF5KDE1KV0ubWFwKChfLGluZCk9PihcbiAgICAgICAgICAgICAgICA8Um93IGtleT17aW5kfSBidXNObz17YnVzTm99IHJvd05vPXtpbmR9PjwvUm93PlxuICAgICAgICAgICAgKSl9XG4gICAgICAgIDwvZGl2PlxuICAgIClcbn07XG5cbmV4cG9ydCBkZWZhdWx0IEJ1czsiXSwibmFtZXMiOlsiaW8iLCJSb3ciLCJ1c2VFZmZlY3QiLCJ1c2VTdGF0ZSIsInNvY2tldCIsIkJ1cyIsImJ1c05vIiwiZGl2IiwiY2xhc3NOYW1lIiwiQXJyYXkiLCJtYXAiLCJfIiwiaW5kIiwicm93Tm8iXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(ssr)/./components/bus.jsx\n");
 
+/***/ }),
+
+/***/ "(ssr)/./components/row.jsx":
+/*!****************************!*\
+  !*** ./components/row.jsx ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(ssr)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _seat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./seat */ \"(ssr)/./components/seat.jsx\");\n\n\nconst Row = ({ rowNo, busNo })=>{\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n        className: \"flex gap-2 m-2\",\n        children: [\n            ...Array(5)\n        ].map((_, ind)=>/*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(_seat__WEBPACK_IMPORTED_MODULE_1__[\"default\"], {\n                seatNo: rowNo * 5 + (ind + 1),\n                busNo: busNo\n            }, ind, false, {\n                fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/row.jsx\",\n                lineNumber: 8,\n                columnNumber: 21\n            }, undefined))\n    }, void 0, false, {\n        fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/row.jsx\",\n        lineNumber: 5,\n        columnNumber: 9\n    }, undefined);\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Row);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9jb21wb25lbnRzL3Jvdy5qc3giLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7QUFBMEI7QUFFMUIsTUFBTUMsTUFBSSxDQUFDLEVBQUNDLEtBQUssRUFBQ0MsS0FBSyxFQUFDO0lBQ3BCLHFCQUNJLDhEQUFDQztRQUFJQyxXQUFVO2tCQUVQO2VBQUlDLE1BQU07U0FBRyxDQUFDQyxHQUFHLENBQUMsQ0FBQ0MsR0FBRUMsb0JBQ2pCLDhEQUFDVCw2Q0FBSUE7Z0JBQUNVLFFBQVEsUUFBTyxJQUFJRCxDQUFBQSxNQUFJO2dCQUFJTixPQUFPQTtlQUFZTTs7Ozs7Ozs7OztBQUt4RTtBQUVBLGlFQUFlUixHQUFHQSxFQUFDIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vY2xpZW50Ly4vY29tcG9uZW50cy9yb3cuanN4PzdlNTEiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFNlYXQgZnJvbSBcIi4vc2VhdFwiO1xuXG5jb25zdCBSb3c9KHtyb3dObyxidXNOb30pPT57XG4gICAgcmV0dXJuIChcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGdhcC0yIG0tMlwiPlxuICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgIFsuLi5BcnJheSg1KV0ubWFwKChfLGluZCk9PihcbiAgICAgICAgICAgICAgICAgICAgPFNlYXQgc2VhdE5vPXsocm93Tm8qNSkrKGluZCsxKX0gYnVzTm89e2J1c05vfSBrZXk9e2luZH0+PC9TZWF0PlxuICAgICAgICAgICAgICAgICkpICBcbiAgICAgICAgICAgIH1cbiAgICAgICAgPC9kaXY+XG4gICAgKTtcbn07XG5cbmV4cG9ydCBkZWZhdWx0IFJvdzsiXSwibmFtZXMiOlsiU2VhdCIsIlJvdyIsInJvd05vIiwiYnVzTm8iLCJkaXYiLCJjbGFzc05hbWUiLCJBcnJheSIsIm1hcCIsIl8iLCJpbmQiLCJzZWF0Tm8iXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(ssr)/./components/row.jsx\n");
+
+/***/ }),
+
+/***/ "(ssr)/./components/seat.jsx":
+/*!*****************************!*\
+  !*** ./components/seat.jsx ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(ssr)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ \"(ssr)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/ssr/react.js\");\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! socket.io-client */ \"(ssr)/./node_modules/socket.io-client/build/esm-debug/index.js\");\n\n\n\nconst socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_2__.io)(\"http://localhost:8000\");\nconst Seat = ({ seatNo, busNo })=>{\n    const [seatStatus, setSeatStatus] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)({});\n    (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(()=>{\n        socket.emit(\"reqSeatStat\");\n        socket.on(\"seatStatus\", (seatStatusUp)=>{\n            setSeatStatus(seatStatusUp);\n        });\n        return ()=>{\n            socket.off(\"seatStatus\");\n        };\n    }, []);\n    const seatColor = ()=>{\n        if (seatStatus[busNo]) {\n            const stat = seatStatus[busNo][seatNo];\n            switch(stat){\n                case \"booked\":\n                    return \"bg-red-500\";\n                case \"locked\":\n                    return \"bg-yellow-500\";\n            }\n        }\n    };\n    const handleClick = ()=>{\n        console.log(seatNo + \" \" + busNo);\n        socket.emit(\"lockSeat\", busNo, seatNo);\n    };\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n        onClick: handleClick,\n        className: `text-center text-sm border-1 bg-slate-200 w-5 h-5 rounded ${seatColor()}`,\n        children: seatNo\n    }, void 0, false, {\n        fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/seat.jsx\",\n        lineNumber: 34,\n        columnNumber: 5\n    }, undefined);\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Seat);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHNzcikvLi9jb21wb25lbnRzL3NlYXQuanN4IiwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7QUFBNEM7QUFDTjtBQUV0QyxNQUFNRyxTQUFTRCxvREFBRUEsQ0FBQztBQUVsQixNQUFNRSxPQUFPLENBQUMsRUFBRUMsTUFBTSxFQUFFQyxLQUFLLEVBQUU7SUFDN0IsTUFBTSxDQUFDQyxZQUFZQyxjQUFjLEdBQUdQLCtDQUFRQSxDQUFDLENBQUM7SUFFOUNELGdEQUFTQSxDQUFDO1FBQ1JHLE9BQU9NLElBQUksQ0FBQztRQUNaTixPQUFPTyxFQUFFLENBQUMsY0FBYyxDQUFDQztZQUN2QkgsY0FBY0c7UUFDaEI7UUFDQSxPQUFPO1lBQ0xSLE9BQU9TLEdBQUcsQ0FBQztRQUNiO0lBQ0YsR0FBRyxFQUFFO0lBQ0wsTUFBTUMsWUFBWTtRQUNoQixJQUFJTixVQUFVLENBQUNELE1BQU0sRUFBRTtZQUNyQixNQUFNUSxPQUFPUCxVQUFVLENBQUNELE1BQU0sQ0FBQ0QsT0FBTztZQUN0QyxPQUFRUztnQkFDTixLQUFLO29CQUNILE9BQU87Z0JBQ1QsS0FBSztvQkFDSCxPQUFPO1lBQ1g7UUFDRjtJQUNGO0lBQ0EsTUFBTUMsY0FBYztRQUNsQkMsUUFBUUMsR0FBRyxDQUFDWixTQUFTLE1BQU1DO1FBQzNCSCxPQUFPTSxJQUFJLENBQUMsWUFBWUgsT0FBT0Q7SUFDakM7SUFDQSxxQkFDRSw4REFBQ2E7UUFDQ0MsU0FBU0o7UUFDVEssV0FBVyxDQUFDLDBEQUEwRCxFQUFFUCxZQUFZLENBQUM7a0JBRXBGUjs7Ozs7O0FBR1A7QUFFQSxpRUFBZUQsSUFBSUEsRUFBQyIsInNvdXJjZXMiOlsid2VicGFjazovL2NsaWVudC8uL2NvbXBvbmVudHMvc2VhdC5qc3g/MTI4OSJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyB1c2VFZmZlY3QsIHVzZVN0YXRlIH0gZnJvbSBcInJlYWN0XCI7XG5pbXBvcnQgeyBpbyB9IGZyb20gXCJzb2NrZXQuaW8tY2xpZW50XCI7XG5cbmNvbnN0IHNvY2tldCA9IGlvKFwiaHR0cDovL2xvY2FsaG9zdDo4MDAwXCIpO1xuXG5jb25zdCBTZWF0ID0gKHsgc2VhdE5vLCBidXNObyB9KSA9PiB7XG4gIGNvbnN0IFtzZWF0U3RhdHVzLCBzZXRTZWF0U3RhdHVzXSA9IHVzZVN0YXRlKHt9KTtcblxuICB1c2VFZmZlY3QoKCkgPT4ge1xuICAgIHNvY2tldC5lbWl0KFwicmVxU2VhdFN0YXRcIik7XG4gICAgc29ja2V0Lm9uKFwic2VhdFN0YXR1c1wiLCAoc2VhdFN0YXR1c1VwKSA9PiB7XG4gICAgICBzZXRTZWF0U3RhdHVzKHNlYXRTdGF0dXNVcCk7XG4gICAgfSk7XG4gICAgcmV0dXJuICgpID0+IHtcbiAgICAgIHNvY2tldC5vZmYoXCJzZWF0U3RhdHVzXCIpO1xuICAgIH07XG4gIH0sIFtdKTtcbiAgY29uc3Qgc2VhdENvbG9yID0gKCkgPT4ge1xuICAgIGlmIChzZWF0U3RhdHVzW2J1c05vXSkge1xuICAgICAgY29uc3Qgc3RhdCA9IHNlYXRTdGF0dXNbYnVzTm9dW3NlYXROb107XG4gICAgICBzd2l0Y2ggKHN0YXQpIHtcbiAgICAgICAgY2FzZSBcImJvb2tlZFwiOlxuICAgICAgICAgIHJldHVybiBcImJnLXJlZC01MDBcIjtcbiAgICAgICAgY2FzZSBcImxvY2tlZFwiOlxuICAgICAgICAgIHJldHVybiBcImJnLXllbGxvdy01MDBcIjtcbiAgICAgIH1cbiAgICB9XG4gIH07XG4gIGNvbnN0IGhhbmRsZUNsaWNrID0gKCkgPT4ge1xuICAgIGNvbnNvbGUubG9nKHNlYXRObyArIFwiIFwiICsgYnVzTm8pO1xuICAgIHNvY2tldC5lbWl0KFwibG9ja1NlYXRcIiwgYnVzTm8sIHNlYXRObyk7XG4gIH07XG4gIHJldHVybiAoXG4gICAgPGRpdlxuICAgICAgb25DbGljaz17aGFuZGxlQ2xpY2t9XG4gICAgICBjbGFzc05hbWU9e2B0ZXh0LWNlbnRlciB0ZXh0LXNtIGJvcmRlci0xIGJnLXNsYXRlLTIwMCB3LTUgaC01IHJvdW5kZWQgJHtzZWF0Q29sb3IoKX1gfVxuICAgID5cbiAgICAgIHtzZWF0Tm99XG4gICAgPC9kaXY+XG4gICk7XG59O1xuXG5leHBvcnQgZGVmYXVsdCBTZWF0O1xuIl0sIm5hbWVzIjpbInVzZUVmZmVjdCIsInVzZVN0YXRlIiwiaW8iLCJzb2NrZXQiLCJTZWF0Iiwic2VhdE5vIiwiYnVzTm8iLCJzZWF0U3RhdHVzIiwic2V0U2VhdFN0YXR1cyIsImVtaXQiLCJvbiIsInNlYXRTdGF0dXNVcCIsIm9mZiIsInNlYXRDb2xvciIsInN0YXQiLCJoYW5kbGVDbGljayIsImNvbnNvbGUiLCJsb2ciLCJkaXYiLCJvbkNsaWNrIiwiY2xhc3NOYW1lIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(ssr)/./components/seat.jsx\n");
 
 /***/ }),
 
@@ -192,29 +399,25 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(rsc)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _row__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./row */ \"(rsc)/./components/row.jsx\");\n\n\nconst Bus = ({ busNo })=>{\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n        className: \" border-4 border-blue-300 rounded-lg w-fit\",\n        children: [\n            ...Array(15)\n        ].map((_, ind)=>/*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(_row__WEBPACK_IMPORTED_MODULE_1__[\"default\"], {\n                busNo: busNo,\n                rowNo: ind\n            }, ind, false, {\n                fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/bus.jsx\",\n                lineNumber: 6,\n                columnNumber: 17\n            }, undefined))\n    }, void 0, false, {\n        fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/bus.jsx\",\n        lineNumber: 4,\n        columnNumber: 9\n    }, undefined);\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Bus);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9jb21wb25lbnRzL2J1cy5qc3giLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7QUFBd0I7QUFDeEIsTUFBTUMsTUFBSSxDQUFDLEVBQUNDLEtBQUssRUFBQztJQUNkLHFCQUNJLDhEQUFDQztRQUFJQyxXQUFVO2tCQUNWO2VBQUlDLE1BQU07U0FBSSxDQUFDQyxHQUFHLENBQUMsQ0FBQ0MsR0FBRUMsb0JBQ25CLDhEQUFDUiw0Q0FBR0E7Z0JBQVdFLE9BQU9BO2dCQUFPTyxPQUFPRDtlQUExQkE7Ozs7Ozs7Ozs7QUFJMUI7QUFFQSxpRUFBZVAsR0FBR0EsRUFBQyIsInNvdXJjZXMiOlsid2VicGFjazovL2NsaWVudC8uL2NvbXBvbmVudHMvYnVzLmpzeD9mMmQzIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSb3cgZnJvbSBcIi4vcm93XCI7XG5jb25zdCBCdXM9KHtidXNOb30pPT57XG4gICAgcmV0dXJuIChcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCIgYm9yZGVyLTQgYm9yZGVyLWJsdWUtMzAwIHJvdW5kZWQtbGcgdy1maXRcIj5cbiAgICAgICAgICAgIHtbLi4uQXJyYXkoMTUpXS5tYXAoKF8saW5kKT0+KFxuICAgICAgICAgICAgICAgIDxSb3cga2V5PXtpbmR9IGJ1c05vPXtidXNOb30gcm93Tm89e2luZH0+PC9Sb3c+XG4gICAgICAgICAgICApKX1cbiAgICAgICAgPC9kaXY+XG4gICAgKVxufTtcblxuZXhwb3J0IGRlZmF1bHQgQnVzOyJdLCJuYW1lcyI6WyJSb3ciLCJCdXMiLCJidXNObyIsImRpdiIsImNsYXNzTmFtZSIsIkFycmF5IiwibWFwIiwiXyIsImluZCIsInJvd05vIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///(rsc)/./components/bus.jsx\n");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   $$typeof: () => (/* binding */ $$typeof),
+/* harmony export */   __esModule: () => (/* binding */ __esModule),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var next_dist_build_webpack_loaders_next_flight_loader_module_proxy__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! next/dist/build/webpack/loaders/next-flight-loader/module-proxy */ "(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-loader/module-proxy.js");
 
-/***/ }),
+const proxy = (0,next_dist_build_webpack_loaders_next_flight_loader_module_proxy__WEBPACK_IMPORTED_MODULE_0__.createProxy)(String.raw`/home/satya-tt0492/Documents/TT/trial-server/client/components/bus.jsx`)
 
-/***/ "(rsc)/./components/row.jsx":
-/*!****************************!*\
-  !*** ./components/row.jsx ***!
-  \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+// Accessing the __esModule property and exporting $$typeof are required here.
+// The __esModule getter forces the proxy target to create the default export
+// and the $$typeof value is for rendering logic to determine if the module
+// is a client boundary.
+const { __esModule, $$typeof } = proxy;
+const __default__ = proxy.default;
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(rsc)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _seat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./seat */ \"(rsc)/./components/seat.jsx\");\n\n\nconst Row = ({ rowNo, busNo })=>{\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n        className: \"flex gap-2 m-2\",\n        children: [\n            ...Array(5)\n        ].map((_, ind)=>/*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(_seat__WEBPACK_IMPORTED_MODULE_1__[\"default\"], {\n                seatNo: rowNo * 5 + (ind + 1),\n                busNo: busNo\n            }, ind, false, {\n                fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/row.jsx\",\n                lineNumber: 8,\n                columnNumber: 21\n            }, undefined))\n    }, void 0, false, {\n        fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/row.jsx\",\n        lineNumber: 5,\n        columnNumber: 9\n    }, undefined);\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Row);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9jb21wb25lbnRzL3Jvdy5qc3giLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7QUFBMEI7QUFFMUIsTUFBTUMsTUFBSSxDQUFDLEVBQUNDLEtBQUssRUFBQ0MsS0FBSyxFQUFDO0lBQ3BCLHFCQUNJLDhEQUFDQztRQUFJQyxXQUFVO2tCQUVQO2VBQUlDLE1BQU07U0FBRyxDQUFDQyxHQUFHLENBQUMsQ0FBQ0MsR0FBRUMsb0JBQ2pCLDhEQUFDVCw2Q0FBSUE7Z0JBQUNVLFFBQVEsUUFBTyxJQUFJRCxDQUFBQSxNQUFJO2dCQUFJTixPQUFPQTtlQUFZTTs7Ozs7Ozs7OztBQUt4RTtBQUVBLGlFQUFlUixHQUFHQSxFQUFDIiwic291cmNlcyI6WyJ3ZWJwYWNrOi8vY2xpZW50Ly4vY29tcG9uZW50cy9yb3cuanN4PzdlNTEiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFNlYXQgZnJvbSBcIi4vc2VhdFwiO1xuXG5jb25zdCBSb3c9KHtyb3dObyxidXNOb30pPT57XG4gICAgcmV0dXJuIChcbiAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJmbGV4IGdhcC0yIG0tMlwiPlxuICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgIFsuLi5BcnJheSg1KV0ubWFwKChfLGluZCk9PihcbiAgICAgICAgICAgICAgICAgICAgPFNlYXQgc2VhdE5vPXsocm93Tm8qNSkrKGluZCsxKX0gYnVzTm89e2J1c05vfSBrZXk9e2luZH0+PC9TZWF0PlxuICAgICAgICAgICAgICAgICkpICBcbiAgICAgICAgICAgIH1cbiAgICAgICAgPC9kaXY+XG4gICAgKTtcbn07XG5cbmV4cG9ydCBkZWZhdWx0IFJvdzsiXSwibmFtZXMiOlsiU2VhdCIsIlJvdyIsInJvd05vIiwiYnVzTm8iLCJkaXYiLCJjbGFzc05hbWUiLCJBcnJheSIsIm1hcCIsIl8iLCJpbmQiLCJzZWF0Tm8iXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///(rsc)/./components/row.jsx\n");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,next_dist_build_webpack_loaders_next_flight_loader_module_proxy__WEBPACK_IMPORTED_MODULE_0__.createProxy)(String.raw`/home/satya-tt0492/Documents/TT/trial-server/client/components/bus.jsx#default`));
 
-/***/ }),
-
-/***/ "(rsc)/./components/seat.jsx":
-/*!*****************************!*\
-  !*** ./components/seat.jsx ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-dev-runtime */ \"(rsc)/./node_modules/next/dist/server/future/route-modules/app-page/vendored/rsc/react-jsx-dev-runtime.js\");\n/* harmony import */ var react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__);\n\nconst Seat = ({ seatNo, busNo })=>{\n    return /*#__PURE__*/ (0,react_jsx_dev_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxDEV)(\"div\", {\n        className: \" text-center text-sm border-1 bg-slate-200 w-5 h-5 rounded\",\n        children: seatNo\n    }, void 0, false, {\n        fileName: \"/home/satya-tt0492/Documents/TT/trial-server/client/components/seat.jsx\",\n        lineNumber: 3,\n        columnNumber: 9\n    }, undefined);\n};\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Seat);\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKHJzYykvLi9jb21wb25lbnRzL3NlYXQuanN4IiwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFBQSxNQUFNQSxPQUFLLENBQUMsRUFBQ0MsTUFBTSxFQUFDQyxLQUFLLEVBQUM7SUFDdEIscUJBQ0ksOERBQUNDO1FBQUlDLFdBQVU7a0JBQThESDs7Ozs7O0FBRXJGO0FBRUEsaUVBQWVELElBQUlBLEVBQUMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9jbGllbnQvLi9jb21wb25lbnRzL3NlYXQuanN4PzEyODkiXSwic291cmNlc0NvbnRlbnQiOlsiY29uc3QgU2VhdD0oe3NlYXRObyxidXNOb30pPT57XG4gICAgcmV0dXJuKFxuICAgICAgICA8ZGl2IGNsYXNzTmFtZT1cIiB0ZXh0LWNlbnRlciB0ZXh0LXNtIGJvcmRlci0xIGJnLXNsYXRlLTIwMCB3LTUgaC01IHJvdW5kZWRcIj57c2VhdE5vfTwvZGl2PlxuICAgICkgICBcbn07XG5cbmV4cG9ydCBkZWZhdWx0IFNlYXQ7Il0sIm5hbWVzIjpbIlNlYXQiLCJzZWF0Tm8iLCJidXNObyIsImRpdiIsImNsYXNzTmFtZSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(rsc)/./components/seat.jsx\n");
 
 /***/ }),
 
@@ -236,7 +439,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 var __webpack_require__ = require("../../webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/@swc"], () => (__webpack_exec__("(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fbook%2Fpage&page=%2Fbook%2Fpage&appPaths=%2Fbook%2Fpage&pagePath=private-next-app-dir%2Fbook%2Fpage.jsx&appDir=%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
+var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/engine.io-client","vendor-chunks/ws","vendor-chunks/socket.io-client","vendor-chunks/@swc","vendor-chunks/engine.io-parser","vendor-chunks/debug","vendor-chunks/socket.io-parser","vendor-chunks/@socket.io","vendor-chunks/xmlhttprequest-ssl","vendor-chunks/supports-color","vendor-chunks/ms","vendor-chunks/has-flag"], () => (__webpack_exec__("(rsc)/./node_modules/next/dist/build/webpack/loaders/next-app-loader.js?name=app%2Fbook%2Fpage&page=%2Fbook%2Fpage&appPaths=%2Fbook%2Fpage&pagePath=private-next-app-dir%2Fbook%2Fpage.jsx&appDir=%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient%2Fapp&pageExtensions=tsx&pageExtensions=ts&pageExtensions=jsx&pageExtensions=js&rootDir=%2Fhome%2Fsatya-tt0492%2FDocuments%2FTT%2Ftrial-server%2Fclient&isDev=true&tsconfigPath=tsconfig.json&basePath=&assetPrefix=&nextConfigOutput=&preferredRegion=&middlewareConfig=e30%3D!")));
 module.exports = __webpack_exports__;
 
 })();
