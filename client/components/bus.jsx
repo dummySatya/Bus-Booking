@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 
 const socket=io("http://localhost:8000");
 
-const Bus=({busNo})=>{
+const Bus=({busNo,rows,cols})=>{
     return (
         <div className=" border-4 border-blue-300 rounded-lg w-fit">
-            {[...Array(15)].map((_,ind)=>(
-                <Row key={ind} busNo={busNo} rowNo={ind}></Row>
+            {[...Array(rows)].map((_,ind)=>(
+                <Row key={ind} busNo={busNo} cols={cols} rowNo={ind}></Row>
             ))}
         </div>
     )

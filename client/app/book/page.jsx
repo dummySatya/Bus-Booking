@@ -5,7 +5,7 @@ const Book=()=>{
     return (
         <>
             <div>Bookings</div>
-                <Bus busNo={busNo}></Bus>
+                <Bus busNo={busNo} rows={15} cols={5}></Bus>
         </>
     )
 };
