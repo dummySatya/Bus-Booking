@@ -1,11 +1,17 @@
 import Bus from "@/components/bus";
 
 const Book=()=>{
-    let busNo=1;
+    let busNo=10;
     return (
         <>
             <div>Bookings</div>
-                <Bus busNo={busNo} rows={15} cols={5}></Bus>
+            <div className="flex flex-wrap gap-5">
+                {
+                    [...Array(10)].map((_,ind)=>(
+                        <Bus key={ind} busNo={ind+1} rows={15} cols={5}></Bus>
+                    ))
+                }
+            </div>
         </>
     )
 };

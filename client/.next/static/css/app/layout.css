@@ -512,8 +512,14 @@ video {
 .w-fit {
   width: fit-content;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .gap-2 {
   gap: 0.5rem;
+}
+.gap-5 {
+  gap: 1.25rem;
 }
 .rounded {
   border-radius: 0.25rem;
