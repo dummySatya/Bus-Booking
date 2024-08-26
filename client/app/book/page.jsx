@@ -10,6 +10,7 @@ const Book = () => {
   let busNo = 10;
   const [username, setUsername] = useState("");
   const [userStatus, setUserStatus] = useState([]);
+  const [seatStatus,setSeatStatus]=useState({});
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -34,7 +35,26 @@ const Book = () => {
       socket.off("userStatus");
     };
   }, []);
-  const handleClick = () => {};
+  useEffect(() => {
+    socket.on("seatStatus", (seatStatusSoc) => {
+      setSeatStatus(seatStatusSoc);
+      // console.log(seatStatus);
+    });
+
+    return () => {
+      socket.off("seatStatus");
+    };
+  }, []);
+
+  const handleClick = () => {
+    socket.emit("bookSeat",{stat:userStatus,uname:username});
+  };
+  const handleCancel=(bno,sno)=>{
+    // socket.emit("cancelBooking",{bno:bno,sno:sno,uname:username});
+  }
+  const handleFree=(bno,sno)=>{
+
+  }
   return (
     <>
       <div className="text-center text-3xl m-2">Bus Bookings</div>
@@ -46,19 +66,35 @@ const Book = () => {
         >
           Book Tickets
         </button>
-        <div>
-          {userStatus &&
-            userStatus.map((tickets, ind) => (
-              <div key={ind} className="flex gap-2">
-                <div>Bus No. : {tickets["busNumber"]}</div>
-                <div>Seat No. :{tickets["seatNumber"]}</div>
-                <div>Status : {tickets["status"]}</div>
-              </div>
-            ))}
-        </div>
+        <details>
+          <summary>View My Tickets</summary>
+          <table className="table border">
+            <tbody>
+              <tr className="border">
+                <th className="p-2">Bus No.</th>
+                <th className="p-2">Seat No.</th>
+                <th className="p-2">Status</th>
+                <th className="p-2">Action</th>
+              </tr>
+              {userStatus &&
+                userStatus.map((tickets, ind) => (
+                  <tr key={ind} className="border hover:bg-green-50">
+                    <td>{tickets["busNumber"]}</td>
+                    <td>{tickets["seatNumber"]}</td>
+                    <td>{tickets["bookingStatus"]}</td>
+                    <td>
+                      {tickets["bookingStatus"]==="booked"?
+                      <button onClick={handleCancel(tickets["busNumber"],tickets["seatNumber"])} className="border bg-orange-500 w-16 m-1 text-xs p-1">Cancel</button>:
+                      <button onClick={handleFree(tickets["busNumber"],tickets["seatNumber"])} className="border w-16 m-1 bg-blue-500 text-xs p-1">Free</button>}
+                      </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </details>
       </div>
       <div className="flex flex-wrap gap-5 m-2 justify-center">
-        {[...Array(10)].map((_, ind) => (
+        {[...Array(busNo)].map((_, ind) => (
           <Bus key={ind} busNo={ind + 1} rows={15} cols={5}></Bus>
         ))}
       </div>
