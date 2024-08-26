@@ -5,9 +5,16 @@ const socket = io("http://localhost:8000");
 
 const Seat = ({ seatNo, busNo }) => {
   const [seatStatus, setSeatStatus] = useState({});
+  const [username,setUsername]=useState("");
 
   useEffect(() => {
-    socket.emit("reqSeatStat");
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
+  useEffect(() => {
     socket.on("seatStatus", (seatStatusUp) => {
       setSeatStatus(seatStatusUp);
     });
@@ -20,15 +27,20 @@ const Seat = ({ seatNo, busNo }) => {
       const stat = seatStatus[busNo][seatNo];
       switch (stat) {
         case "booked":
-          return "bg-red-500";
+          return "cursor-not-allowed bg-red-500";
         case "locked":
-          return "bg-yellow-500";
+          return "cursor-not-allowed bg-yellow-500";
+        default:
+          return "cursor-pointer"
       }
     }
+    return "cursor-pointer";
   };
   const handleClick = () => {
     console.log(seatNo + " " + busNo);
-    socket.emit("lockSeat", busNo, seatNo);
+    if(!seatStatus[busNo] || !seatStatus[busNo][seatNo]){
+      socket.emit("lockSeat",username, busNo, seatNo);
+    }
   };
   return (
     <div
