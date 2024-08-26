@@ -35,11 +35,28 @@ io.on("connection", (socket) => {
                 break;
             }
         }
-        seatStatus[bno][sno]=null;
+        delete seatStatus[bno][sno];
         console.log("After Cancel Booking ",seatStatus);
         console.log("After Cancel Booking User: ",userStatus[username]);
-        socket.emit("seatStatus",seatStatus);
-        socket.emit("userStatus",userStatus[username]);
+        io.emit("seatStatus",seatStatus);
+        io.emit("userStatus",userStatus[username]);
+    })
+
+    socket.on("freeBooking",(data)=>{
+        const bno=data.bno;
+        const sno=data.sno;
+        const username=data.uname;
+        for(let j=0;j<userStatus[username].length;j++){
+            if(userStatus[username][j]["busNumber"]===bno && userStatus[username][j]["seatNumber"]===sno){
+                userStatus[username].splice(j,1);
+                break;
+            }
+        }
+        delete seatStatus[bno][sno];
+        console.log("After Free Booking ",seatStatus);
+        console.log("After Free Booking User: ",userStatus[username]);
+        io.emit("seatStatus",seatStatus);
+        io.emit("userStatus",userStatus[username]);
     })
 
     socket.on("bookSeat", (data) => {

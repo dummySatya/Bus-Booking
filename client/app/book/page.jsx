@@ -10,7 +10,7 @@ const Book = () => {
   let busNo = 10;
   const [username, setUsername] = useState("");
   const [userStatus, setUserStatus] = useState([]);
-  const [seatStatus,setSeatStatus]=useState({});
+  const [seatStatus, setSeatStatus] = useState({});
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
@@ -47,14 +47,14 @@ const Book = () => {
   }, []);
 
   const handleClick = () => {
-    socket.emit("bookSeat",{stat:userStatus,uname:username});
+    socket.emit("bookSeat", { stat: userStatus, uname: username });
   };
-  const handleCancel=(bno,sno)=>{
-    // socket.emit("cancelBooking",{bno:bno,sno:sno,uname:username});
-  }
-  const handleFree=(bno,sno)=>{
-
-  }
+  const handleCancel = (bno, sno) => {
+    socket.emit("cancelBooking", { bno: bno, sno: sno, uname: username });
+  };
+  const handleFree = (bno, sno) => {
+    socket.emit("freeBooking", { bno: bno, sno: sno, uname: username });
+  };
   return (
     <>
       <div className="text-center text-3xl m-2">Bus Bookings</div>
@@ -83,10 +83,32 @@ const Book = () => {
                     <td>{tickets["seatNumber"]}</td>
                     <td>{tickets["bookingStatus"]}</td>
                     <td>
-                      {tickets["bookingStatus"]==="booked"?
-                      <button onClick={handleCancel(tickets["busNumber"],tickets["seatNumber"])} className="border bg-orange-500 w-16 m-1 text-xs p-1">Cancel</button>:
-                      <button onClick={handleFree(tickets["busNumber"],tickets["seatNumber"])} className="border w-16 m-1 bg-blue-500 text-xs p-1">Free</button>}
-                      </td>
+                      {tickets["bookingStatus"] === "booked" ? (
+                        <button
+                          onClick={() => {
+                            handleCancel(
+                              tickets["busNumber"],
+                              tickets["seatNumber"]
+                            );
+                          }}
+                          className="border bg-orange-500 w-16 m-1 text-xs p-1"
+                        >
+                          Cancel
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            handleFree(
+                              tickets["busNumber"],
+                              tickets["seatNumber"]
+                            );
+                          }}
+                          className="border w-16 m-1 bg-blue-500 text-xs p-1"
+                        >
+                          Free
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 ))}
             </tbody>
