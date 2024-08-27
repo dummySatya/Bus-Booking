@@ -22,44 +22,45 @@ const Book = () => {
   useEffect(() => {
     if (username) {
       socket.emit("reqSeatStat", username);
+
+      socket.on("userStatus", (data) => {
+        const uname = data.uname;
+        console.log("Received uname: ", uname, "Current username: ", username);
+        if (uname === username) {
+          const userStatusSoc = data.ustat;
+          console.log("User status: ", userStatusSoc);
+          setUserStatus(userStatusSoc);
+        }
+      });
+
+      socket.on("seatStatus", (seatStatusSoc) => {
+        setSeatStatus(seatStatusSoc);
+      });
+
+      return () => {
+        socket.off("userStatus");
+        socket.off("seatStatus");
+      };
     }
   }, [username]);
-
-  useEffect(() => {
-    socket.on("userStatus", (userStatusSoc) => {
-      console.log(userStatusSoc);
-      setUserStatus(userStatusSoc);
-    });
-
-    return () => {
-      socket.off("userStatus");
-    };
-  }, []);
-  useEffect(() => {
-    socket.on("seatStatus", (seatStatusSoc) => {
-      setSeatStatus(seatStatusSoc);
-      // console.log(seatStatus);
-    });
-
-    return () => {
-      socket.off("seatStatus");
-    };
-  }, []);
 
   const handleClick = () => {
     socket.emit("bookSeat", { stat: userStatus, uname: username });
   };
+
   const handleCancel = (bno, sno) => {
     socket.emit("cancelBooking", { bno: bno, sno: sno, uname: username });
   };
+
   const handleFree = (bno, sno) => {
     socket.emit("freeBooking", { bno: bno, sno: sno, uname: username });
   };
+
   return (
     <>
       <div className="text-center text-3xl m-2">Bus Bookings</div>
       <div className="text-center text-xl flex flex-col items-center m-3">
-        Welcome {username} !
+        Welcome {username}!
         <button
           onClick={handleClick}
           className="border text-lg m-2 text-white p-1 w-36 rounded-lg bg-red-400"
@@ -85,24 +86,24 @@ const Book = () => {
                     <td>
                       {tickets["bookingStatus"] === "booked" ? (
                         <button
-                          onClick={() => {
+                          onClick={() =>
                             handleCancel(
                               tickets["busNumber"],
                               tickets["seatNumber"]
-                            );
-                          }}
+                            )
+                          }
                           className="border bg-orange-500 w-16 m-1 text-xs p-1"
                         >
                           Cancel
                         </button>
                       ) : (
                         <button
-                          onClick={() => {
+                          onClick={() =>
                             handleFree(
                               tickets["busNumber"],
                               tickets["seatNumber"]
-                            );
-                          }}
+                            )
+                          }
                           className="border w-16 m-1 bg-blue-500 text-xs p-1"
                         >
                           Free

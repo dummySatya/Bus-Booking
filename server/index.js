@@ -39,7 +39,7 @@ io.on("connection", (socket) => {
         console.log("After Cancel Booking ",seatStatus);
         console.log("After Cancel Booking User: ",userStatus[username]);
         io.emit("seatStatus",seatStatus);
-        io.emit("userStatus",userStatus[username]);
+        io.emit("userStatus",{uname:username,ustat:userStatus[username]});
     })
 
     socket.on("freeBooking",(data)=>{
@@ -56,7 +56,7 @@ io.on("connection", (socket) => {
         console.log("After Free Booking ",seatStatus);
         console.log("After Free Booking User: ",userStatus[username]);
         io.emit("seatStatus",seatStatus);
-        io.emit("userStatus",userStatus[username]);
+        io.emit("userStatus",{uname:username,ustat:userStatus[username]});
     })
 
     socket.on("bookSeat", (data) => {
@@ -76,7 +76,7 @@ io.on("connection", (socket) => {
         }
         console.log("After Book: ",userStatus[username]);
         io.emit("seatStatus",seatStatus);
-        io.emit("userStatus",userStatus[username])
+        io.emit("userStatus",{uname:username,ustat:userStatus[username]})
     });
 
     socket.on("lockSeat", (username, busNumber, seatNumber) => {
@@ -94,7 +94,7 @@ io.on("connection", (socket) => {
         }
         userStatus[username].push(detail);
         io.emit("seatStatus", seatStatus);
-        io.emit("userStatus", userStatus[username]);
+        io.emit("userStatus", {uname:username,ustat:userStatus[username]});
         console.log("SeatStat: ", seatStatus);
         console.log("UserStat: ", userStatus);
     });
@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
     socket.on("reqSeatStat", (username) => {
         console.log("Name ", username);
         socket.emit("seatStatus", seatStatus);
-        socket.emit("userStatus", userStatus[username]||[]);
+        socket.emit("userStatus", {uname:username,ustat:userStatus[username]});
     });
 
     socket.on("disconnect", () => {
