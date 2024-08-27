@@ -15,22 +15,26 @@ const Seat = ({ seatNo, busNo }) => {
   }, []);
 
   useEffect(() => {
-    socket.on("seatStatus", (seatStatusUp) => {
-      setSeatStatus(seatStatusUp);
-    });
+    if (username) {
+      socket.emit("reqSeatStat", username);
+    }
+  }, [username]);
 
-    socket.emit("reqSeatStat",username);
+  useEffect(() => {
+    const handleSeatStatusUpdate = (seatStatusUp) => {
+      setSeatStatus({ ...seatStatusUp });
+    };
+
+    socket.on("seatStatus", handleSeatStatusUpdate);
 
     return () => {
-      socket.off("seatStatus");
+      socket.off("seatStatus", handleSeatStatusUpdate);
     };
   }, []);
 
   const seatColor = () => {
-    if (seatStatus[busNo]) {
-      const stat = seatStatus[busNo][seatNo];
-      console.log(stat);
-
+    if (seatStatus[busNo] && seatStatus[busNo][seatNo]) {
+      const stat = seatStatus[busNo][seatNo].stat;
       switch (stat) {
         case "booked":
           return "cursor-not-allowed bg-red-500";
@@ -44,7 +48,6 @@ const Seat = ({ seatNo, busNo }) => {
   };
 
   const handleClick = () => {
-    console.log(seatNo + " " + busNo);
     if (!seatStatus[busNo] || !seatStatus[busNo][seatNo]) {
       socket.emit("lockSeat", username, busNo, seatNo);
     }
@@ -54,6 +57,7 @@ const Seat = ({ seatNo, busNo }) => {
     <div
       onClick={handleClick}
       className={`text-center text-sm border-1 w-5 h-5 rounded ${seatColor()}`}
+      key={`${busNo}-${seatNo}-${seatStatus[busNo]?.[seatNo]?.stat}`}
     >
       {seatNo}
     </div>

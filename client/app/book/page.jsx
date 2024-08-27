@@ -7,7 +7,10 @@ import { io } from "socket.io-client";
 const socket = io("http://localhost:8000");
 
 const Book = () => {
-  let busNo = 10;
+  const [buses, setBuses] = useState(0);
+  const [rows, setRows] = useState(0);
+  const [cols, setCols] = useState(0);
+
   const [username, setUsername] = useState("");
   const [userStatus, setUserStatus] = useState([]);
   const [seatStatus, setSeatStatus] = useState({});
@@ -18,7 +21,17 @@ const Book = () => {
       setUsername(storedUsername);
     }
   }, []);
-
+  useEffect(() => {
+    socket.on("busStats", (data) => {
+      setBuses(data.buses);
+      setRows(data.rows);
+      setCols(data.cols);
+    });
+    console.log("Req recieved: ", { buses, cols, rows });
+    return () => {
+      socket.off("busStats");
+    };
+  }, [buses]);
   useEffect(() => {
     if (username) {
       socket.emit("reqSeatStat", username);
@@ -33,7 +46,8 @@ const Book = () => {
       });
 
       socket.on("seatStatus", (seatStatusSoc) => {
-        setSeatStatus(seatStatusSoc);
+        setSeatStatus({ ...seatStatusSoc });
+        console.log("Saaaa: ", seatStatus);
       });
 
       return () => {
@@ -42,13 +56,23 @@ const Book = () => {
       };
     }
   }, [username]);
-
+  useEffect(() => {
+    socket.on("triggerFree", (data) => {
+      socket.emit("freeBooking", data);
+    });
+    return () => {
+      socket.off("triggerFree");
+    };
+  });
   const handleClick = () => {
     socket.emit("bookSeat", { stat: userStatus, uname: username });
   };
 
   const handleCancel = (bno, sno) => {
     socket.emit("cancelBooking", { bno: bno, sno: sno, uname: username });
+    setTimeout(() => {
+      socket.emit("reqSeatStat", username);
+    }, 100);
   };
 
   const handleFree = (bno, sno) => {
@@ -116,8 +140,8 @@ const Book = () => {
         </details>
       </div>
       <div className="flex flex-wrap gap-5 m-2 justify-center">
-        {[...Array(busNo)].map((_, ind) => (
-          <Bus key={ind} busNo={ind + 1} rows={15} cols={5}></Bus>
+        {[...Array(buses)].map((_, ind) => (
+          <Bus key={ind} busNo={ind + 1} rows={rows} cols={cols}></Bus>
         ))}
       </div>
     </>
