@@ -35,7 +35,7 @@ const Seat = ({ seatNo, busNo }) => {
         case "booked":
           return "cursor-not-allowed bg-red-500";
         case "locked":
-          return "cursor-not-allowed bg-yellow-500";
+          return "cursor-progress bg-yellow-500";
         default:
           return "bg-slate-200 cursor-pointer";
       }

@@ -543,6 +543,9 @@ video {
 .cursor-pointer {
   cursor: pointer;
 }
+.cursor-progress {
+  cursor: progress;
+}
 .flex-col {
   flex-direction: column;
 }

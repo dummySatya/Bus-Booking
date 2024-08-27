@@ -25,7 +25,6 @@ const Book = () => {
 
       socket.on("userStatus", (data) => {
         const uname = data.uname;
-        console.log("Received uname: ", uname, "Current username: ", username);
         if (uname === username) {
           const userStatusSoc = data.ustat;
           console.log("User status: ", userStatusSoc);
