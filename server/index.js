@@ -45,6 +45,59 @@ app.get("/", (req, res) => {
   res.send("Server on");
 });
 
+const bookingsCheck = (bookArr1, bookArr2) => {
+  let i = 0,
+    j = 0,
+    n1 = bookArr1.length,
+    n2 = bookArr2.length;
+  while (i < n1 && j < n2) {
+    if (bookArr1[i] < bookArr2[j]) {
+      i++;
+    } else if (bookArr1[i] > bookArr2[j]) {
+      j++;
+    } else {
+      return false;
+    }
+  }
+  return true;
+};
+
+const mergers = () => {
+  let possibleBus = [];
+  for (let busNo in busBookings) {
+    if (busBookings[busNo].load < 0.2) {
+      possibleBus.push({ busNo: busNo, seatStatus: seatStatus[busNo] });
+    }
+  }
+  let possibleMergers = [];
+  let bookings = [];
+  for (let bus in possibleBus) {
+    const busNo = bus.busNo;
+    const seatStatus = bus.seatStatus;
+    let seats = [];
+    for (let seat in seatStatus) {
+      if (seatStatus[seat]["stat"] === "booked") {
+        seats.push(seat);
+      }
+    }
+    seats.sort();
+    const bookedSeats = { busNo: busNo, seats: seats };
+    bookings.push(bookedSeats);
+  }
+  const bookingsCount = bookings.length;
+  for (let i = 0; i < bookingsCount; i++) {
+    for (let j = i + 1; j < bookingsCount; j++) {
+      if (bookingsCheck(bookings[i].seats, bookings[j].seats)) {
+        if (!possibleMergers[bookings[i].busNo]) {
+          possibleMergers[bookings[i].busNo] = [];
+        }
+        possibleMergers[bookings[i].busNo].push(bookings[j].busNo);
+      }
+    }
+  }
+  console.log("Possible Mergers: ",possibleMergers);
+};
+
 io.on("connection", (socket) => {
   console.log("Client Connected");
   socket.emit("seatStatus", seatStatus);
@@ -139,6 +192,7 @@ io.on("connection", (socket) => {
       console.log("Emiting");
       io.emit("busStats", { buses: buses, rows: rows, cols: cols });
     }
+    mergers();
   });
 
   socket.on("lockSeat", (username, busNumber, seatNumber) => {
