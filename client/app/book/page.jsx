@@ -7,9 +7,8 @@ import { io } from "socket.io-client";
 const socket = io("http://localhost:8000");
 
 const Book = () => {
-  const [buses, setBuses] = useState(0);
-  const [rows, setRows] = useState(0);
-  const [cols, setCols] = useState(0);
+  const [mergerStatus,setMergerStatus]=useState(false);
+  const [buses, setBuses] = useState([]);
 
   const [username, setUsername] = useState("");
   const [userStatus, setUserStatus] = useState([]);
@@ -21,13 +20,26 @@ const Book = () => {
       setUsername(storedUsername);
     }
   }, []);
+  useEffect(()=>{
+    socket.emit("initialStatus");
+    socket.on("mergerOn",()=>{
+      setMergerStatus(true);
+    });
+    socket.on("mergerOff",()=>{
+      setMergerStatus(false);
+      socket.emit("reqSeatStat", username);
+    });
+
+    return (()=>{
+      socket.off("mergerOn");
+      socket.off("mergerOff");
+    })
+  },[mergerStatus])
   useEffect(() => {
     socket.on("busStats", (data) => {
-      setBuses(data.buses);
-      setRows(data.rows);
-      setCols(data.cols);
+      setBuses(data);
     });
-    console.log("Req recieved: ", { buses, cols, rows });
+    console.log("Recieved: ",buses);
     return () => {
       socket.off("busStats");
     };
@@ -40,14 +52,12 @@ const Book = () => {
         const uname = data.uname;
         if (uname === username) {
           const userStatusSoc = data.ustat;
-          console.log("User status: ", userStatusSoc);
           setUserStatus(userStatusSoc);
         }
       });
 
       socket.on("seatStatus", (seatStatusSoc) => {
         setSeatStatus({ ...seatStatusSoc });
-        console.log("Saaaa: ", seatStatus);
       });
 
       return () => {
@@ -70,9 +80,7 @@ const Book = () => {
 
   const handleCancel = (bno, sno) => {
     socket.emit("cancelBooking", { bno: bno, sno: sno, uname: username });
-    setTimeout(() => {
-      socket.emit("reqSeatStat", username);
-    }, 100);
+    socket.emit("reqSeatStat", username);
   };
 
   const handleFree = (bno, sno) => {
@@ -85,8 +93,9 @@ const Book = () => {
       <div className="text-center text-xl flex flex-col items-center m-3">
         Welcome {username}!
         <button
+          disabled={mergerStatus}
           onClick={handleClick}
-          className="border text-lg m-2 text-white p-1 w-36 rounded-lg bg-red-400"
+          className={`border ${mergerStatus?"opacity-20":null} text-lg m-2 text-white p-1 w-36 rounded-lg bg-red-400`}
         >
           Book Tickets
         </button>
@@ -109,25 +118,27 @@ const Book = () => {
                     <td>
                       {tickets["bookingStatus"] === "booked" ? (
                         <button
+                        disabled={mergerStatus}
                           onClick={() =>
                             handleCancel(
                               tickets["busNumber"],
                               tickets["seatNumber"]
                             )
                           }
-                          className="border bg-orange-500 w-16 m-1 text-xs p-1"
+                          className={`border ${mergerStatus?"opacity-20":null} bg-orange-500 w-16 m-1 text-xs p-1`}
                         >
                           Cancel
                         </button>
                       ) : (
                         <button
+                        disabled={mergerStatus}
                           onClick={() =>
                             handleFree(
                               tickets["busNumber"],
                               tickets["seatNumber"]
                             )
                           }
-                          className="border w-16 m-1 bg-blue-500 text-xs p-1"
+                          className={`border ${mergerStatus?"opacity-20":null} w-16 m-1 bg-blue-500 text-xs p-1`}
                         >
                           Free
                         </button>
@@ -140,8 +151,12 @@ const Book = () => {
         </details>
       </div>
       <div className="flex flex-wrap gap-5 m-2 justify-center">
-        {[...Array(buses)].map((_, ind) => (
-          <Bus key={ind} busNo={ind + 1} rows={rows} cols={cols}></Bus>
+        {mergerStatus?
+          <div className="text-4xl text-red-800">Bus altercation in process</div>:
+          null
+        }
+        {!mergerStatus && buses.map((bus, ind) => (
+          <Bus key={ind} busNo={bus.busNumber} rows={bus.rows} cols={bus.cols}></Bus>
         ))}
       </div>
     </>

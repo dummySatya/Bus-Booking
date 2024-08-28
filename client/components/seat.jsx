@@ -6,7 +6,7 @@ const socket = io("http://localhost:8000");
 const Seat = ({ seatNo, busNo }) => {
   const [seatStatus, setSeatStatus] = useState({});
   const [username, setUsername] = useState("");
-
+  const [buses,setBuses]=useState({});
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     if (storedUsername) {
@@ -20,6 +20,12 @@ const Seat = ({ seatNo, busNo }) => {
     }
   }, [username]);
 
+  useEffect(()=>{
+    socket.on("busesAvailable",(data)=>{
+      setBuses(data);
+    })
+  })
+  
   useEffect(() => {
     const handleSeatStatusUpdate = (seatStatusUp) => {
       setSeatStatus({ ...seatStatusUp });
@@ -48,7 +54,7 @@ const Seat = ({ seatNo, busNo }) => {
   };
 
   const handleClick = () => {
-    if (!seatStatus[busNo] || !seatStatus[busNo][seatNo]) {
+    if (buses[busNo]) {
       socket.emit("lockSeat", username, busNo, seatNo);
     }
   };
