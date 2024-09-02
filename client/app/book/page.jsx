@@ -3,8 +3,7 @@
 import Bus from "@/components/bus";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:8000");
+import socket from "@/utils/socket";
 
 const Book = () => {
   const [mergerStatus,setMergerStatus]=useState(false);
@@ -49,14 +48,16 @@ const Book = () => {
       socket.emit("reqSeatStat", username);
 
       socket.on("userStatus", (data) => {
+        console.log("User stats: ",data);
         const uname = data.uname;
-        if (uname === username) {
-          const userStatusSoc = data.ustat;
+        if (uname === username && data && data.ustat) {
+          const userStatusSoc = data.ustat.bookings;
           setUserStatus(userStatusSoc);
         }
       });
 
       socket.on("seatStatus", (seatStatusSoc) => {
+        console.log(seatStatusSoc);
         setSeatStatus({ ...seatStatusSoc });
       });
 
@@ -75,6 +76,7 @@ const Book = () => {
     };
   });
   const handleClick = () => {
+    console.log("Book: ",userStatus);
     socket.emit("bookSeat", { stat: userStatus, uname: username });
   };
 
@@ -152,10 +154,10 @@ const Book = () => {
       </div>
       <div className="flex flex-wrap gap-5 m-2 justify-center">
         {mergerStatus?
-          <div className="text-4xl text-red-800">Bus altercation in process</div>:
+          <div className="text-4xl text-red-800">Bus alteration in process</div>:
           null
         }
-        {!mergerStatus && buses.map((bus, ind) => (
+        {!mergerStatus && buses && buses.map((bus, ind) => (
           <Bus key={ind} busNo={bus.busNumber} rows={bus.rows} cols={bus.cols}></Bus>
         ))}
       </div>

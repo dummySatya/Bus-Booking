@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:8000");
+import socket from "@/utils/socket";
 
 const Seat = ({ seatNo, busNo }) => {
   const [seatStatus, setSeatStatus] = useState({});
@@ -29,10 +28,10 @@ const Seat = ({ seatNo, busNo }) => {
   useEffect(() => {
     const handleSeatStatusUpdate = (seatStatusUp) => {
       setSeatStatus({ ...seatStatusUp });
+      console.log("Seat: ",seatStatus);
     };
 
     socket.on("seatStatus", handleSeatStatusUpdate);
-
     return () => {
       socket.off("seatStatus", handleSeatStatusUpdate);
     };
@@ -41,6 +40,7 @@ const Seat = ({ seatNo, busNo }) => {
   const seatColor = () => {
     if (seatStatus[busNo] && seatStatus[busNo][seatNo]) {
       const stat = seatStatus[busNo][seatNo].stat;
+      console.log(("Stat: ",stat));
       switch (stat) {
         case "booked":
           return "cursor-not-allowed bg-red-500";
@@ -54,7 +54,8 @@ const Seat = ({ seatNo, busNo }) => {
   };
 
   const handleClick = () => {
-    if (buses[busNo]) {
+    console.log("Seat: ",seatStatus[busNo]?.[seatNo]?.stat);
+    if (buses[busNo] && !(seatStatus[busNo]?.[seatNo]?.stat)) {
       socket.emit("lockSeat", username, busNo, seatNo);
     }
   };
