@@ -21,11 +21,13 @@ const Book = () => {
   }, []);
   useEffect(()=>{
     socket.emit("initialStatus");
-    socket.on("mergerOn",()=>{
+    socket.on("mergerOn",(data)=>{
       setMergerStatus(true);
+      console.log("Merger: ",mergerStatus);
     });
     socket.on("mergerOff",()=>{
       setMergerStatus(false);
+      console.log("Merger: ",mergerStatus);
       socket.emit("reqSeatStat", username);
     });
 

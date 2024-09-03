@@ -17,7 +17,13 @@ let seatStatusCollection,
   userStatusCollection,
   busCheckCollection,
   busesCollection,
-  busBookingsCollection;
+  busBookingsCollection,
+  mergerFlag=false;
+
+const totalBusesInitial = 3;
+const rows = 5;
+const cols = 1;
+let totalBuses = totalBusesInitial;
 
 const initializeMongoDB = async () => {
   try {
@@ -37,13 +43,10 @@ const initializeMongoDB = async () => {
     await initializeBuses();
   } catch (error) {
     console.error("Error connecting to MongoDB:", error);
-    process.exit(1); // Exit the application if DB connection fails
+    process.exit(1);
   }
 };
-const totalBusesInitial = 3;
-const rows = 5;
-const cols = 1;
-let totalBuses = totalBusesInitial;
+
 
 const initializeBuses = async () => {
   try {
@@ -69,6 +72,7 @@ const initializeBuses = async () => {
     console.error("Error initializing buses:", error);
   }
 };
+
 // File-based Logging using Buffered Queue
 const __fileName = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__fileName);
@@ -112,7 +116,7 @@ const checkLoad = async () => {
         const busesAvailable = await busCheckCollection
           .find({})
           .sort({ busNumber: 1 })
-          .collation({locale:"en_US", numericOrdering:true})
+          .collation({ locale: "en_US", numericOrdering: true })
           .toArray();
         for (let i = 0; i < busesAvailable.length; i++) {
           const obj = busesAvailable[i].busNumber;
@@ -129,12 +133,12 @@ const checkLoad = async () => {
             $push: {
               buses: {
                 $each: [{ busNumber: busNumber, rows: rows, cols: cols }],
-                $position: parseInt(busNumber.toString())-1,
+                $position: parseInt(busNumber.toString()) - 1,
               },
             },
           }
         );
-        const temp=await busesCollection.find({}).toArray();
+        const temp = await busesCollection.find({}).toArray();
         await busCheckCollection.insertOne({ busNumber, active: true });
       }
       log("Buses added and updated.");
@@ -146,6 +150,7 @@ const checkLoad = async () => {
     return false;
   }
 };
+
 const bookingsCheck = (bookArr1, bookArr2) => {
   let i = 0,
     j = 0;
@@ -284,8 +289,10 @@ const mergers = async () => {
     return {};
   }
 };
+
 // Initialize MongoDB and Start Server
 initializeMongoDB().then(() => {
+
   // ********** SERVER SETUP **********
 
   const app = express();
@@ -443,7 +450,6 @@ initializeMongoDB().then(() => {
           if (bookingStatus === "booked") continue;
           log(`Booking Seat for BusNo: ${bno}, SeatNo: ${sno}`);
 
-          // delete
           // Update seatStatus
           await seatStatusCollection.updateOne(
             { busNumber: bno },
@@ -640,7 +646,6 @@ initializeMongoDB().then(() => {
     });
 
     // Handle merging related events
-    let mergerFlag = false;
 
     socket.on("initialStatus", () => {
       log(`Initial Status of Merger: ${mergerFlag}`);

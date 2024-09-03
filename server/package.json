@@ -12,7 +12,9 @@
   "description": "",
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@socket.io/cluster-adapter": "^0.2.2",
     "@socket.io/redis-adapter": "^8.3.0",
+    "@socket.io/sticky": "^1.0.4",
     "diskusage": "^1.2.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

@@ -4,8 +4,8 @@ import {faker} from "@faker-js/faker";
 const SOCKET_URL = 'http://localhost:8000';
 const NUM_CLIENTS = 100;
 const EVENTS_PER_CLIENT = 20;
-const BUS_COUNT = 10;
-const SEAT_COUNT = 30;
+const BUS_COUNT = 3;
+const SEAT_COUNT = 20;
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 

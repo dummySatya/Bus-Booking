@@ -1,357 +1,782 @@
 import cluster from "cluster";
-import os from "os";
-import express from "express";
-import { createServer } from "http";
+import http from "http";
 import { Server } from "socket.io";
-import cors from "cors";
+import { cpus } from "os";
+import { setupMaster, setupWorker } from "@socket.io/sticky";
+import { createAdapter, setupPrimary } from "@socket.io/cluster-adapter";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { MongoClient } from "mongodb";
 
-if (cluster.isMaster) {
-  const numCPUs = os.cpus().length;
-  console.log(`Master process is running. Forking ${numCPUs} workers...`);
+const numCPUs = cpus().length;
+if (cluster.isPrimary) {
+  let visits=0;
 
-  // Global state managed by the master process
-  let globalState = {
-    seatStatus: {},
-    userStatus: {},
-    timers: {},
-    buses: [],
-    busCheck: {},
-    busBookings: {},
-    totalBuses: 3,
-    rows: 5,
-    cols: 1,
-    mergerFlag: false,
-  };
+  console.log(`Master ${process.pid} is running`);
 
-  // Initialize the buses
-  for (let i = 1; i <= globalState.totalBuses; i++) {
-    globalState.buses.push({
-      busNumber: `${i}`,
-      rows: globalState.rows,
-      cols: globalState.cols,
-    });
-    globalState.busCheck[`${i}`] = true;
-  }
+  const httpServer = http.createServer();
 
-  // Fork workers
-  for (let i = 0; i < numCPUs; i++) {
-    const worker = cluster.fork();
-
-    // Send the initial global state to the worker
-    worker.send({ type: "stateUpdate", state: globalState });
-  }
-
-  // Listen for messages from workers
-  for (const id in cluster.workers) {
-    cluster.workers[id].on("message", (msg) => {
-      if (msg.type === "updateState") {
-        // Update global state
-        globalState = { ...globalState, ...msg.state };
-
-        // Broadcast the updated state to all workers
-        for (const id in cluster.workers) {
-          cluster.workers[id].send({ type: "stateUpdate", state: globalState });
-        }
-      }
-    });
-  }
-
-  cluster.on("exit", (worker, code, signal) => {
-    console.log(`Worker ${worker.process.pid} died. Forking a new one...`);
-    const newWorker = cluster.fork();
-    newWorker.send({ type: "stateUpdate", state: globalState });
+  // setup sticky sessions
+  setupMaster(httpServer, {
+    loadBalancingMethod: "least-connection",
   });
 
-} else {
-  // Worker processes will run the server code
-  const app = express();
-  app.use(cors());
+  // setup connections between the workers
+  setupPrimary();
 
-  const server = createServer(app);
-  const io = new Server(server, {
-    cors: {
-      origin: "*",
-    },
+  cluster.setupPrimary({
+    serialization: "advanced",
   });
 
-  // Local state in each worker (initially empty)
-  let localState = {
-    seatStatus: {},
-    userStatus: {},
-    timers: {},
-    buses: [],
-    busCheck: {},
-    busBookings: {},
-    totalBuses: 3,
-    rows: 5,
-    cols: 1,
-    mergerFlag: false,
-  };
+  httpServer.listen(8000);
+  const uri = "mongodb://localhost:27017";
+  const client = new MongoClient(uri);
 
-  // Handle incoming messages from the master process
-  process.on("message", (msg) => {
-    if (msg.type === "stateUpdate") {
-      localState = msg.state;
+  // Global Variables
+  let busCheckCollection, busesCollection;
+  const initializeMongoDB = async () => {
+    try {
+      await client.connect();
+      const db = client.db("busBooker");
+
+      // Initialize Collections
+      busCheckCollection = db.collection("busCheck");
+      busesCollection = db.collection("buses");
+
+      console.log("Connected to MongoDB and initialized collections.");
+
+      // Initialize Buses
+      await initializeBuses();
+    } catch (error) {
+      console.error("Error connecting to MongoDB:", error);
+      process.exit(1);
     }
-  });
-
-  const loadFactor = (seats) => {
-    return seats / (localState.rows * localState.cols);
   };
+  const totalBusesInitial = 3;
+  const rows = 5;
+  const cols = 1;
+  let totalBuses = totalBusesInitial;
 
-  const checkLoad = () => {
-    let loader = 0;
-    for (let busNo in localState.busBookings) {
-      if (localState.busBookings[busNo].load >= 0.8) {
-        loader++;
+  const initializeBuses = async () => {
+    try {
+      const busesFound = await busesCollection.find({}).toArray();
+      console.log(busesFound);
+      if (busesFound.length > 0) {
+        totalBuses = busesFound[0].totalBuses;
+        return;
       }
-    }
-    if (loader == localState.totalBuses) {
-      localState.totalBuses += 2;
-      let limit = 2;
-      for (let i = 0; limit > 0 && i < localState.buses.length; i++) {
-        if (localState.buses[i].busNumber === `${i + 1}`) {
-          continue;
-        } else {
-          localState.buses.push({
-            busNumber: `${i + 1}`,
-            rows: localState.rows,
-            cols: localState.cols,
-          });
-          localState.busCheck[`${i + 1}`] = true;
-          limit--;
-          localState.buses.sort();
-        }
-      }
-      while (limit > 0) {
-        localState.buses.push({
-          busNumber: `${localState.buses.length + 1}`,
-          rows: localState.rows,
-          cols: localState.cols,
+      let buses = [];
+      for (let i = 1; i <= totalBuses; i++) {
+        const busNumber = `${i}`;
+        buses.push({
+          busNumber,
+          rows,
+          cols,
         });
-        localState.busCheck[`${localState.buses.length}`] = true;
-        limit--;
+        // Insert into busCheckCollection
+        await busCheckCollection.insertOne({ busNumber, active: true });
       }
-      updateGlobalState();
-      return true;
+      await busesCollection.insertOne({
+        _id: 1,
+        buses: buses,
+        totalBuses: totalBuses,
+      });
+      console.log("Initialized buses and inserted into busCheckCollection.");
+    } catch (error) {
+      console.error("Error initializing buses:", error);
     }
-    return false;
   };
 
-  const updateGlobalState = () => {
-    process.send({ type: "updateState", state: localState });
+  initializeMongoDB().then(() => {
+    for (let i = 0; i < numCPUs; i++) {
+      const worker=cluster.fork();
+
+      worker.on("message",(data)=>{
+        if(data.visits){
+          visits+=data.visits;
+          console.log("Visitors: ",visits);
+        }
+      })
+    }
+
+    cluster.on("exit", (worker) => {
+      console.log(`Worker ${worker.process.pid} died`);
+      cluster.fork();
+    });
+  });
+} else {
+  // MongoDB Configuration
+  const uri = "mongodb://localhost:27017";
+  const client = new MongoClient(uri);
+
+  // Global Variables
+  let seatStatusCollection,
+    userStatusCollection,
+    busCheckCollection,
+    busesCollection,
+    busBookingsCollection;
+
+  const initializeMongoDB = async () => {
+    try {
+      await client.connect();
+      const db = client.db("busBooker");
+
+      // Initialize Collections
+      seatStatusCollection = db.collection("seatStatus");
+      userStatusCollection = db.collection("userStatus");
+      busCheckCollection = db.collection("busCheck");
+      busBookingsCollection = db.collection("busBookings");
+      busesCollection = db.collection("buses");
+
+      console.log("Connected to MongoDB and initialized collections.");
+
+      // Initialize Buses
+      await initializeBuses();
+    } catch (error) {
+      console.error("Error connecting to MongoDB:", error);
+      process.exit(1);
+    }
+  };
+  const totalBusesInitial = 3;
+  const rows = 5;
+  const cols = 1;
+  let totalBuses = totalBusesInitial;
+
+  const initializeBuses = async () => {
+    try {
+      const busesFound = await busesCollection.find({}).toArray();
+      if (busesFound.length > 0) {
+        totalBuses = busesFound[0].totalBuses;
+        return;
+      }
+    } catch (error) {
+      console.error("Error finding no. of buses:", error);
+    }
+  };
+
+  // File-based Logging using Buffered Queue
+  const __fileName = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__fileName);
+  const logFilePath = path.join(__dirname, "archive.log");
+  const loggerQueue = [];
+
+  const logIntoFile = () => {
+    if (loggerQueue.length === 0) return;
+    const logMsg = loggerQueue.join("");
+    loggerQueue.length = 0;
+    fs.appendFile(logFilePath, logMsg, (err) => {
+      if (err) {
+        console.error("Failed to write log:", err);
+      }
+    });
+  };
+
+  setInterval(logIntoFile, 3000);
+
+  const log = (message) => {
+    const timestamp = new Date().toISOString();
+    const logMessage = `${timestamp} - ${message}\n`;
+    loggerQueue.push(logMessage);
+  };
+  const loadFactor = (seats, rows, cols) => {
+    return seats / (rows * cols);
+  };
+  const loadThreshold = 0.8;
+
+  const checkLoad = async () => {
+    totalBuses = await busesCollection.find({ _id: 1 }).toArray();
+    totalBuses = totalBuses[0].totalBuses;
+    try {
+      const loader = await busBookingsCollection.countDocuments({
+        load: { $gte: loadThreshold },
+      });
+      if (loader >= totalBuses && totalBuses < 100) {
+        const busesToAdd = 2;
+        for (let i = 0; i < busesToAdd; i++) {
+          let k = 1;
+          totalBuses++;
+          let busNumber = `${totalBuses}`;
+          const busesAvailable = await busCheckCollection
+            .find({})
+            .sort({ busNumber: 1 })
+            .collation({ locale: "en_US", numericOrdering: true })
+            .toArray();
+          for (let i = 0; i < busesAvailable.length; i++) {
+            const obj = busesAvailable[i].busNumber;
+            if (`${k}` == obj) {
+              k++;
+            } else {
+              busNumber = `${k}`;
+              break;
+            }
+          }
+          await busesCollection.updateOne(
+            { _id: 1 },
+            {
+              $push: {
+                buses: {
+                  $each: [{ busNumber: busNumber, rows: rows, cols: cols }],
+                  $position: parseInt(busNumber.toString()) - 1,
+                },
+              },
+            }
+          );
+          const temp = await busesCollection.updateOne(
+            { _id: 1 },
+            { $inc: { totalBuses: 1 } }
+          );
+          await busCheckCollection.insertOne({ busNumber, active: true });
+        }
+        log("Buses added and updated.");
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error in checkLoad:", error);
+      return false;
+    }
   };
 
   const bookingsCheck = (bookArr1, bookArr2) => {
     let i = 0,
-      j = 0,
-      n1 = bookArr1.length,
+      j = 0;
+    const n1 = bookArr1.length,
       n2 = bookArr2.length;
+
     while (i < n1 && j < n2) {
       if (bookArr1[i] < bookArr2[j]) {
         i++;
       } else if (bookArr1[i] > bookArr2[j]) {
         j++;
       } else {
-        return false;
+        return false; // Conflict found
       }
     }
-    return true;
+    return true; // No conflict
   };
 
-  const merge = (bus1, bus2) => {
-    const bus2Stats = localState.seatStatus[bus2];
-    const userVisited = {};
-    for (let seat in bus2Stats) {
-      localState.seatStatus[bus1][seat] = bus2Stats[seat];
-      const seater = localState.seatStatus[bus1][seat];
-      const user = seater.uname;
-      if (!userVisited[user]) {
-        userVisited[user] = true;
-        for (let i = 0; i < localState.userStatus[user].length; i++) {
-          if (localState.userStatus[user][i].busNumber == bus2) {
-            localState.userStatus[user][i].busNumber = bus1;
-          }
-        }
-      }
-    }
-
-    localState.busBookings[bus1].seats += localState.busBookings[bus2].seats;
-    localState.busBookings[bus1].load = loadFactor(localState.busBookings[bus1].seats);
-    delete localState.seatStatus[bus2];
-    delete localState.busBookings[bus2];
-    delete localState.busCheck[bus2];
-
-    for (let i = 0; i < localState.buses.length; i++) {
-      if (localState.buses[i].busNumber == bus2) {
-        localState.buses.splice(i, 1);
-        break;
-      }
-    }
-    localState.totalBuses--;
-    updateGlobalState();
-    return true;
-  };
-
-  const mergers = () => {
-    let possibleBus = [];
-    for (let busNo in localState.busBookings) {
-      if (localState.busBookings[busNo].load <= 0.2) {
-        possibleBus.push({ busNo: busNo, seatStatus: localState.seatStatus[busNo] });
-      }
-    }
-
-    let possibleMergers = {};
-    let bookings = [];
-    for (let i = 0; i < possibleBus.length; i++) {
-      const bus = possibleBus[i];
-      const busNo = bus.busNo;
-      const possibleSeatStatus = bus.seatStatus;
-      let seats = [];
-      for (let seat in possibleSeatStatus) {
-        if (possibleSeatStatus[seat]["stat"] === "booked") {
-          seats.push(seat);
-        }
-      }
-      seats.sort();
-      const bookedSeats = { busNo: busNo, seats: seats };
-      bookings.push(bookedSeats);
-    }
-
-    const bookingsCount = bookings.length;
-    for (let i = 0; i < bookingsCount; i++) {
-      for (let j = i + 1; j < bookingsCount; j++) {
-        if (bookingsCheck(bookings[i].seats, bookings[j].seats)) {
-          if (!possibleMergers[bookings[i].busNo]) {
-            possibleMergers[bookings[i].busNo] = [];
-          }
-          possibleMergers[bookings[i].busNo].push(bookings[j].busNo);
-        }
-      }
-    }
-    return possibleMergers;
-  };
-
-  io.on("connection", (socket) => {
-    console.log("Client Connected");
-    socket.emit("seatStatus", localState.seatStatus);
-
-    socket.on("cancelBooking", (data) => {
-      const bno = data.bno;
-      const sno = data.sno;
-      const username = data.uname;
-
-      for (
-        let j = 0;
-        localState.userStatus[username] && j < localState.userStatus[username].length;
-        j++
-      ) {
-        if (
-          localState.userStatus[username][j]["busNumber"] === bno &&
-          localState.userStatus[username][j]["seatNumber"] === sno &&
-          localState.userStatus[username][j]["bookingStatus"] === "booked"
-        ) {
-          localState.userStatus[username].splice(j, 1);
-          localState.busBookings[bno].seats--;
-          const load = loadFactor(localState.busBookings[bno].seats);
-          localState.busBookings[bno].load = load;
-          break;
-        }
-      }
-      if (localState.seatStatus[bno] && localState.seatStatus[bno][sno]) {
-        delete localState.seatStatus[bno][sno];
-      }
-      updateGlobalState();
-      io.emit("seatStatus", localState.seatStatus);
-      io.emit("userStatus", { uname: username, ustat: localState.userStatus[username] });
-    });
-
-    socket.on("bookSeat", (data) => {
-      const username = data.uname;
-      const busNumber = data.bno;
-      const seatNumber = data.sno;
-
-      if (!localState.seatStatus[busNumber]) {
-        localState.seatStatus[busNumber] = {};
-      }
-      localState.seatStatus[busNumber][seatNumber] = {
-        stat: "booked",
-        uname: username,
-      };
-
-      if (!localState.userStatus[username]) {
-        localState.userStatus[username] = [];
-      }
-      localState.userStatus[username].push({
-        busNumber: busNumber,
-        seatNumber: seatNumber,
-        bookingStatus: "booked",
+  const merge = async (bus1, bus2) => {
+    try {
+      // Fetch seat statuses for both buses
+      const bus1Status = await seatStatusCollection.findOne({
+        busNumber: bus1,
+      });
+      const bus2Status = await seatStatusCollection.findOne({
+        busNumber: bus2,
       });
 
-      if (!localState.busBookings[busNumber]) {
-        localState.busBookings[busNumber] = {
-          seats: 0,
-          load: 0.0,
-        };
+      if (!bus1Status || !bus2Status) {
+        log(`One of the buses ${bus1} or ${bus2} does not exist.`);
+        return false;
       }
-      localState.busBookings[busNumber].seats++;
-      localState.busBookings[busNumber].load = loadFactor(localState.busBookings[busNumber].seats);
-      checkLoad();
-      updateGlobalState();
-      io.emit("seatStatus", localState.seatStatus);
-      io.emit("userStatus", { uname: username, ustat: localState.userStatus[username] });
 
-      if (localState.mergerFlag) {
-        const mergerBuses = mergers();
-        for (let busNo in mergerBuses) {
-          if (mergerBuses[busNo].length > 0) {
-            for (let i = 0; i < mergerBuses[busNo].length; i++) {
-              if (localState.busCheck[busNo] && localState.busCheck[mergerBuses[busNo][i]]) {
-                localState.busCheck[busNo] = localState.busCheck[mergerBuses[busNo][i]] = false;
-                merge(busNo, mergerBuses[busNo][i]);
-                break;
-              }
+      // Merge seat statuses
+      for (let seat in bus2Status.seats) {
+        const doc = bus2Status.seats[seat];
+        seatStatusCollection.updateOne(
+          { busNumber: bus1 },
+          { $set: { [`seats.${seat}`]: doc } }
+        );
+        // bus1Status.seats[seat] = bus2Status.seats[seat];
+
+        // Update userStatus accordingly
+        const username = bus2Status.seats[seat].uname;
+        if (username) {
+          await userStatusCollection.updateOne(
+            { username },
+            { $set: { "bookings.$[elem].busNumber": bus1 } },
+            { arrayFilters: [{ "elem.busNumber": bus2 }], multi: true }
+          );
+        }
+      }
+
+      // Update busBookings
+      const bus1Booking = await busBookingsCollection.findOne({
+        busNumber: bus1,
+      });
+      const bus2Booking = await busBookingsCollection.findOne({
+        busNumber: bus2,
+      });
+
+      if (bus1Booking && bus2Booking) {
+        const updatedSeats = bus1Booking.seats + bus2Booking.seats;
+        const updatedLoad = loadFactor(updatedSeats, rows, cols);
+        await busBookingsCollection.updateOne(
+          { busNumber: bus1 },
+          { $set: { seats: updatedSeats, load: updatedLoad } }
+        );
+
+        // Delete bus2 entries
+        await seatStatusCollection.deleteOne({ busNumber: bus2 });
+        await busBookingsCollection.deleteOne({ busNumber: bus2 });
+        await busCheckCollection.deleteOne({ busNumber: bus2 });
+
+        // Remove from buses array
+        busesCollection.updateOne(
+          { _id: 1 },
+          {
+            $pull: {
+              buses: { busNumber: bus2 },
+            },
+            $inc: { totalBuses: -1 },
+          }
+        );
+        totalBuses--;
+        log(`Merged ${bus2} into ${bus1}`);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("Error merging buses:", error);
+      return false;
+    }
+  };
+
+  const mergers = async () => {
+    try {
+      log("Checking for possible mergers.");
+      const possibleBuses = await busBookingsCollection
+        .find({ load: { $lte: 0.2 } })
+        .toArray();
+      const possibleBusDetails = [];
+
+      for (let bus of possibleBuses) {
+        const busNo = bus.busNumber;
+        const seatStatus = await seatStatusCollection.findOne({
+          busNumber: busNo,
+        });
+        const bookedSeats = Object.keys(seatStatus.seats).filter(
+          (seat) => seatStatus.seats[seat].stat === "booked"
+        );
+        bookedSeats.sort();
+        possibleBusDetails.push({ busNo, seats: bookedSeats });
+      }
+
+      const possibleMergers = {};
+      const bookingsCount = possibleBusDetails.length;
+
+      for (let i = 0; i < bookingsCount; i++) {
+        for (let j = i + 1; j < bookingsCount; j++) {
+          if (
+            bookingsCheck(
+              possibleBusDetails[i].seats,
+              possibleBusDetails[j].seats
+            )
+          ) {
+            if (!possibleMergers[possibleBusDetails[i].busNo]) {
+              possibleMergers[possibleBusDetails[i].busNo] = [];
             }
+            possibleMergers[possibleBusDetails[i].busNo].push(
+              possibleBusDetails[j].busNo
+            );
           }
         }
       }
+
+      return possibleMergers;
+    } catch (error) {
+      console.error("Error in mergers function:", error);
+      return {};
+    }
+  };
+  console.log(`Worker ${process.pid} started`);
+  initializeMongoDB().then(() => {
+    const httpServer = http.createServer();
+    const io = new Server(httpServer, {
+      cors: {
+        origin: "*",
+      },
     });
 
-    socket.on("lockSeat", (data) => {
-      const busNumber = data.bno;
-      const seatNumber = data.sno;
-      const username = data.uname;
+    // use the cluster adapter
+    io.adapter(createAdapter());
 
-      if (!localState.seatStatus[busNumber]) {
-        localState.seatStatus[busNumber] = {};
-      }
-      if (!localState.timers[username]) {
-        localState.timers[username] = {};
-      }
-      localState.seatStatus[busNumber][seatNumber] = {
-        stat: "locked",
-        uname: username,
-      };
-      localState.timers[username][seatNumber] = setTimeout(() => {
-        if (
-          localState.seatStatus[busNumber][seatNumber] &&
-          localState.seatStatus[busNumber][seatNumber]["stat"] === "locked"
-        ) {
-          delete localState.seatStatus[busNumber][seatNumber];
-          io.emit("seatStatus", localState.seatStatus);
+    // setup connection with the primary process
+    setupWorker(io);
+
+    io.on("connection", (socket) => {
+      console.log("Client Connected in :", process.pid);
+      log("Client Connected.");
+      process.send({visits:1});
+      // Emit seatStatus on connection
+      const emitSeatStatus = async () => {
+        try {
+          const allSeatStatusesArray = await seatStatusCollection
+            .find({})
+            .toArray();
+          const allSeatStatuses = {};
+          allSeatStatusesArray.forEach((bus) => {
+            allSeatStatuses[bus.busNumber] = bus.seats;
+          });
+
+          io.emit("seatStatus", allSeatStatuses);
+          log("Emitted Seat Status on connection.");
+        } catch (error) {
+          console.error("Error emitting seatStatus:", error);
         }
-      }, 300000); // lock for 5 minutes
-      updateGlobalState();
-      io.emit("seatStatus", localState.seatStatus);
-    });
+      };
 
-    socket.on("disconnect", () => {
-      console.log("Client Disconnected");
-    });
-  });
+      emitSeatStatus();
 
-  const port = 8000;
-  server.listen(port, () => {
-    console.log(`Worker ${process.pid} running on port ${port}`);
+      // Handle cancelBooking
+      socket.on("cancelBooking", async (data) => {
+        const { bno, sno, uname } = data;
+        log(
+          `Cancel Booking Started for User: ${uname}, BusNo: ${bno}, SeatNo: ${sno}`
+        );
+
+        try {
+          // Update userStatus
+          await userStatusCollection.updateOne(
+            { username: uname },
+            {
+              $pull: {
+                bookings: {
+                  busNumber: bno,
+                  seatNumber: sno,
+                  bookingStatus: "booked",
+                },
+              },
+            }
+          );
+
+          // Update busBookings
+          const busStats = await busBookingsCollection
+            .find({
+              busNumber: bno,
+            })
+            .toArray();
+          const seats = busStats.length > 0 ? busStats[0].seats : 0;
+          await busBookingsCollection.updateOne(
+            { busNumber: bno },
+            {
+              $inc: { seats: -1 },
+              $set: { load: loadFactor(seats - 1, rows, cols) },
+            },
+            { upsert: true }
+          );
+
+          // Update seatStatus
+          await seatStatusCollection.updateOne(
+            { busNumber: bno },
+            { $unset: { [`seats.${sno}`]: "" } }
+          );
+
+          log(
+            `Cancel Booking Completed for User: ${uname}, BusNo: ${bno}, SeatNo: ${sno}`
+          );
+
+          // Emit updated statuses
+          emitSeatStatus();
+          const updatedUserStatus = await userStatusCollection.findOne({
+            username: uname,
+          });
+          socket.emit("userStatus", { uname, ustat: updatedUserStatus });
+          log("Emitted updated User Status after Cancel Booking.");
+
+          // Check and add buses if necessary
+          if (await checkLoad()) {
+            const updatedBuses = await busCheckCollection
+              .find({ active: true })
+              .toArray();
+            io.emit("busStats", updatedBuses);
+            log("Emitted Bus Stats after Bus Addition.");
+          }
+        } catch (error) {
+          console.error("Error in cancelBooking:", error);
+        }
+      });
+
+      // Handle freeBooking
+      socket.on("freeBooking", async (data) => {
+        const { bno, sno, uname } = data;
+        log(`Free Booking Started for BusNo: ${bno}, SeatNo: ${sno}`);
+
+        try {
+          // Update userStatus
+          await userStatusCollection.updateOne(
+            { username: uname },
+            { $pull: { bookings: { busNumber: bno, seatNumber: sno } } }
+          );
+
+          // Update seatStatus
+          await seatStatusCollection.updateOne(
+            { busNumber: bno },
+            { $unset: { [`seats.${sno}`]: "" } }
+          );
+
+          log(`Free Booking Completed for BusNo: ${bno}, SeatNo: ${sno}`);
+
+          // Emit updated statuses
+          emitSeatStatus();
+          const updatedUserStatus = await userStatusCollection.findOne({
+            username: uname,
+          });
+          socket.emit("userStatus", { uname, ustat: updatedUserStatus });
+          log("Emitted updated User Status after Free Booking.");
+        } catch (error) {
+          console.error("Error in freeBooking:", error);
+        }
+      });
+
+      // Handle bookSeat
+      socket.on("bookSeat", async (data) => {
+        const { stat, uname } = data;
+        log(`Book Seat started for User: ${uname}`);
+        try {
+          for (let booking of stat) {
+            const {
+              busNumber: bno,
+              seatNumber: sno,
+              bookingStatus: bookingStatus,
+            } = booking;
+            if (bookingStatus === "booked") continue;
+            log(`Booking Seat for BusNo: ${bno}, SeatNo: ${sno}`);
+
+            // Update seatStatus
+            await seatStatusCollection.updateOne(
+              { busNumber: bno },
+              { $set: { [`seats.${sno}`]: { stat: "booked", uname } } }
+            );
+            // Update userStatus
+            await userStatusCollection.updateOne(
+              { username: uname },
+              {
+                $pull: {
+                  bookings: {
+                    busNumber: bno,
+                    seatNumber: sno,
+                    bookingStatus: "locked",
+                  },
+                },
+              }
+            );
+
+            await userStatusCollection.updateOne(
+              { username: uname },
+              {
+                $push: {
+                  bookings: {
+                    busNumber: bno,
+                    seatNumber: sno,
+                    bookingStatus: "booked",
+                  },
+                },
+              }
+            );
+            // Update busBookings
+            const busStats = await busBookingsCollection
+              .find({
+                busNumber: bno,
+              })
+              .toArray();
+            const seats = busStats.length > 0 ? busStats[0].seats : 0;
+            await busBookingsCollection.updateOne(
+              { busNumber: bno },
+              {
+                $inc: { seats: 1 },
+                $set: { load: loadFactor(seats + 1, rows, cols) },
+              },
+              { upsert: true }
+            );
+
+            log(`Booked Seat for BusNo: ${bno}, SeatNo: ${sno}`);
+          }
+          // Emit updated statuses
+          emitSeatStatus();
+          const updatedUserStatus = await userStatusCollection.findOne({
+            username: uname,
+          });
+          socket.emit("userStatus", { uname, ustat: updatedUserStatus });
+          log("Emitted updated User Status after Book Seat.");
+
+          // Check and add buses if necessary
+          if (await checkLoad()) {
+            const updatedBuses = await busCheckCollection
+              .find({ active: true })
+              .toArray();
+            io.emit("busStats", updatedBuses);
+            log("Emitted Bus Stats after Bus Addition.");
+          }
+        } catch (error) {
+          console.error("Error in bookSeat:", error);
+        }
+      });
+
+      // Handle lockSeat
+      socket.on("lockSeat", async (username, busNumber, seatNumber) => {
+        log(
+          `Lock Seat started for User: ${username}, BusNo: ${busNumber}, SeatNo: ${seatNumber}`
+        );
+        try {
+          // Check if bus is active
+          const busActive = await busCheckCollection.findOne({
+            busNumber,
+            active: true,
+          });
+          if (!busActive) {
+            log(`Bus ${busNumber} is not active.`);
+            return;
+          }
+
+          // Update seatStatus
+          await seatStatusCollection.updateOne(
+            { busNumber, [`seats.${seatNumber}`]: { $exists: false } },
+            {
+              $set: {
+                [`seats.${seatNumber}`]: { stat: "locked", uname: username },
+              },
+            },
+            { upsert: true }
+          );
+
+          // Update userStatus
+          await userStatusCollection.updateOne(
+            { username },
+            {
+              $push: {
+                bookings: { busNumber, seatNumber, bookingStatus: "locked" },
+              },
+            },
+            { upsert: true }
+          );
+
+          log(
+            `Locked Seat for User: ${username}, BusNo: ${busNumber}, SeatNo: ${seatNumber}`
+          );
+
+          // Emit updated statuses
+          emitSeatStatus();
+          const updatedUserStatus = await userStatusCollection.findOne({
+            username,
+          });
+          socket.emit("userStatus", {
+            uname: username,
+            ustat: updatedUserStatus,
+          });
+          log("Emitted updated User Status after Lock Seat.");
+
+          // Set a timer to automatically free the seat after 10 seconds
+          setTimeout(async () => {
+            const seat = await seatStatusCollection.findOne({
+              busNumber,
+              [`seats.${seatNumber}.stat`]: "locked",
+            });
+            if (seat) {
+              // Emit triggerFree event
+              socket.emit("triggerFree", {
+                bno: busNumber,
+                sno: seatNumber,
+                uname: username,
+              });
+
+              // Free the seat
+              await seatStatusCollection.updateOne(
+                { busNumber },
+                { $unset: { [`seats.${seatNumber}`]: "" } }
+              );
+
+              // Update userStatus
+              await userStatusCollection.updateOne(
+                { username },
+                { $pull: { bookings: { busNumber, seatNumber } } }
+              );
+
+              // Emit updated statuses
+              emitSeatStatus();
+              const updatedUserStatusAfterFree =
+                await userStatusCollection.findOne({ username });
+              socket.emit("userStatus", {
+                uname: username,
+                ustat: updatedUserStatusAfterFree,
+              });
+              log(
+                `Automatically freed SeatNo: ${seatNumber} on BusNo: ${busNumber} for User: ${username}`
+              );
+            }
+          }, 10000); // 10 seconds
+        } catch (error) {
+          console.error("Error in lockSeat:", error);
+        }
+      });
+
+      // Handle reqSeatStat
+      socket.on("reqSeatStat", async (username) => {
+        log("Seat Status Requested.");
+        try {
+          const allBusesArray = await busCheckCollection
+            .find({ active: true })
+            .toArray();
+          let allBuses = {};
+          allBusesArray.forEach((bus) => {
+            allBuses[bus.busNumber] = true;
+          });
+          const user = await userStatusCollection.findOne({ username });
+          const buses = await busesCollection.findOne({_id:1});
+          socket.emit("busStats", buses.buses);
+          log("Emitted Bus Stats.");
+
+          emitSeatStatus();
+
+          socket.emit("busesAvailable", allBuses);
+          log("Emitted Buses Available.");
+
+          socket.emit("userStatus", { uname: username, ustat: user });
+          log("Emitted User Status.");
+        } catch (error) {
+          console.error("Error in reqSeatStat:", error);
+        }
+      });
+
+      // Handle merging related events
+      let mergerFlag=false;
+
+      socket.on("initialStatus", () => {
+        log(`Initial Status of Merger: ${mergerFlag}`);
+        if (mergerFlag) {
+          io.emit("mergerOn");
+        } else {
+          io.emit("mergerOff");
+        }
+      });
+
+      socket.on("mergeStart", async () => {
+        mergerFlag = true;
+        const possibleBus = await mergers();
+        io.emit("mergerOn", possibleBus);
+        log("Entering Merger.");
+      });
+
+      socket.on("merge", async (data) => {
+        const { bus1, bus2 } = data;
+        log(`Merger Request for ${bus1} and ${bus2}`);
+
+        const mergerStatus = await merge(bus1, bus2);
+        if (mergerStatus) {
+          const updatedBuses = await busCheckCollection
+            .find({ active: true })
+            .toArray();
+          io.emit("busesAvailable", updatedBuses);
+          const buses = await busesCollection.find({});
+          io.emit("busStats", buses.buses);
+          const possibleBus = await mergers();
+          io.emit("mergerOn", possibleBus);
+        }
+        log("Merger Request Handled.");
+      });
+
+      socket.on("mergeFinished", () => {
+        mergerFlag = false;
+        io.emit("mergerOff");
+        log("Exiting Merger.");
+      });
+
+      // Handle disconnect
+      socket.on("disconnect", () => {
+        log("Client Disconnected.");
+        console.log("Client Disconnected:", socket.id);
+      });
+    });
   });
 }
